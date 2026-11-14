@@ -1,0 +1,37 @@
+# Dependencias
+node_modules/
+
+# Builds
+dist/
+build/
+*.tsbuildinfo
+
+# Variables de entorno (nunca subir claves)
+.env
+.env.*
+!.env.example
+
+# Python / FastAPI
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Supabase y Vercel
+supabase/.temp/
+supabase/.branches/
+.vercel/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Herramientas y editores
+.impeccable/
+.idea/
+.vscode/
+.claude/
+.DS_Store
