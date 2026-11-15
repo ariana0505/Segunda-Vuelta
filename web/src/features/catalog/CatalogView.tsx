@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import type { Listing, ListingMode } from '../../types'
 import { Icon } from '../../components/Icons'
 import { ListingCard } from './ListingCard'
+import { ContentState } from '../../components/ContentState'
 
 interface Props {
   listings: Listing[]
@@ -82,12 +83,9 @@ export function CatalogView({ listings, onOpen, onPublish }: Props) {
             {visible.map((item) => <ListingCard key={item.id} listing={item} onOpen={onOpen} />)}
           </div>
         ) : (
-          <div className="empty-state">
-            <span className="empty-shape" aria-hidden="true" />
-            <h3>No encontramos prendas con esos filtros</h3>
-            <p>Prueba otra búsqueda o comparte la primera de esta categoría.</p>
-            <button className="button button-dark" onClick={() => { setQuery(''); setCategory('Todas'); setMode('todas'); setSize(''); setZone('') }}>Ver todas las prendas</button>
-          </div>
+          <ContentState kind="empty" title="No encontramos prendas con esos filtros" action={<button className="button button-dark" onClick={() => { setQuery(''); setCategory('Todas'); setMode('todas'); setSize(''); setZone('') }}>Ver todas las prendas</button>}>
+            Prueba otra búsqueda o comparte la primera de esta categoría.
+          </ContentState>
         )}
       </section>
     </>
