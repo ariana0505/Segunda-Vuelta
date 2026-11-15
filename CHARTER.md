@@ -30,6 +30,26 @@ Hoy se comparte por grupos de WhatsApp o Facebook del barrio. Ahí las publicaci
 
 Dos personas del barrio publican y acuerdan una donación o un intercambio real usando la aplicación.
 
+## Decisiones tomadas
+
+- **Stack:** React + TypeScript + Vite en Vercel; FastAPI para autenticación y reglas de negocio; Supabase (Postgres y Storage) accedido solo desde FastAPI.
+- **Estructura del repo:** `web/` (frontend) y `api/` (backend, desde la fase 4).
+- **Privacidad:** la ficha pública muestra solo una zona aproximada. El teléfono se entrega únicamente a las dos personas, tras aceptar la solicitud, y la regla se aplica en el servidor, no solo en la interfaz.
+- **Flujo de trabajo:** una rama por fase, commits atómicos, Pull Request con review propio, CI en verde y merge a `main`. Plan completo en [faces.md](faces.md).
+
+## Supuestos por confirmar
+
+- Hoy el barrio lo resuelve con grupos de WhatsApp o Facebook.
+- La primera comunidad es un solo barrio. Aún no está nombrado.
+- La coordinación sigue siendo por teléfono, fuera de la aplicación.
+
+## Decisiones abiertas
+
+- Dónde se aloja FastAPI: Vercel (función serverless), Render, Railway o Fly.io.
+- Dónde se guarda el JWT en el navegador: cookie `httpOnly` (más segura) o `localStorage`.
+- Nombre definitivo del producto. «Segunda Vuelta» es provisional.
+- Nombre del barrio y datos legales (privacidad de teléfonos y fotos), a definir antes de probar con personas reales.
+
 ## Tres cosas técnicas que todavía no sé hacer
 
 1. **Autenticación con FastAPI:** hash de contraseñas, JWT con expiración y dónde guardarlo en el navegador de forma segura.
