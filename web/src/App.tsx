@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { DEMO_USER_ID } from './data/demo'
-import { Footer } from './components/Footer'
-import { Header } from './components/Header'
+import { Layout } from './components/Layout'
 import { CatalogView } from './features/catalog/CatalogView'
 import { ListingDetail } from './features/listings/ListingDetail'
 import { MyListingsView } from './features/listings/MyListingsView'
@@ -45,17 +44,14 @@ export default function App() {
   }
 
   return (
-    <div className="app-shell">
-      <div className="demo-banner"><span className="demo-dot" /> DEMO INTERACTIVA <span className="banner-divider">·</span> Los datos son de ejemplo y se reinician al recargar.</div>
-      <Header view={view} onNavigate={navigate} pendingCount={pendingCount} />
+    <Layout view={view} onNavigate={navigate} pendingCount={pendingCount}>
       {view === 'catalog' && <CatalogView listings={marketplace.listings} onOpen={openListing} onPublish={() => navigate('publish')} />}
       {view === 'detail' && selected && <ListingDetail key={selected.id} listing={selected} ownListings={ownAvailable} alreadyRequested={marketplace.requests.some((request) => request.listingId === selected.id && request.requesterId === DEMO_USER_ID && request.status !== 'rechazada')} onBack={() => navigate('catalog')} onMyListings={() => navigate('my-listings')} onRequest={marketplace.createRequest} onSuccess={(message) => { showMessage(message); navigate('requests') }} onError={(message) => showMessage(message, 'error')} />}
       {view === 'detail' && !selected && <main className="shell empty-state"><h1>No encontramos esta prenda</h1><p>Es posible que ya no esté disponible.</p><button className="button button-dark" onClick={() => navigate('catalog')}>Volver al catálogo</button></main>}
       {view === 'publish' && <PublishForm onPublish={marketplace.createListing} onSuccess={(message) => { showMessage(message); navigate('my-listings') }} onError={(message) => showMessage(message, 'error')} />}
       {view === 'my-listings' && <MyListingsView listings={marketplace.listings} requests={marketplace.requests} onPublish={() => navigate('publish')} onOpen={openListing} onRequests={() => navigate('requests')} onAccept={marketplace.acceptRequest} onReject={marketplace.rejectRequest} onRepost={marketplace.repostListing} onMessage={handleResult} />}
       {view === 'requests' && <RequestsView requests={marketplace.requests} listings={marketplace.listings} onBrowse={() => navigate('catalog')} onMyListings={() => navigate('my-listings')} onMessage={handleResult} onSimulateAccept={(id) => marketplace.acceptRequest(id, '988 234 567', true)} onMarkAgreement={marketplace.markAgreement} />}
-      <Footer />
       {toast && <div className={`toast ${toast.kind}`} role={toast.kind === 'error' ? 'alert' : 'status'}>{toast.message}<button onClick={() => setToast(null)} aria-label="Cerrar aviso">×</button></div>}
-    </div>
+    </Layout>
   )
 }
