@@ -2,6 +2,14 @@
 
 Prototipo navegable en React y TypeScript para explorar, publicar, solicitar y acordar encuentros para donaciones o intercambios de ropa. Usa datos de ejemplo en memoria; al recargar la página se reinician los cambios. El backend FastAPI y PostgreSQL se conectarán en una etapa posterior.
 
+## Problema y usuario
+
+Vecinas y vecinos de un barrio que quieren regalar o cambiar ropa hoy lo hacen en grupos de WhatsApp o Facebook, donde las publicaciones se pierden y el teléfono queda expuesto. Segunda Vuelta ofrece un catálogo con solicitudes y comparte el contacto solo entre las dos personas. Detalles en [CHARTER.md](CHARTER.md) y [PRODUCT.md](PRODUCT.md).
+
+## Stack
+
+React + TypeScript + Vite (Vercel) · FastAPI (autenticación y reglas de negocio) · Supabase (Postgres y Storage). El plan de ramas y commits está en [faces.md](faces.md).
+
 ## Ejecutar
 
 ```bash
