@@ -1,5 +1,5 @@
 from functools import lru_cache
-from typing import Iterator
+from collections.abc import Iterator
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
