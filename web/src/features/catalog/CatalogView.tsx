@@ -10,7 +10,7 @@ interface Props {
   onPublish: () => void
 }
 
-const categories = ['Todas', 'Chaquetas', 'Abrigos', 'Tejidos', 'Camisetas', 'Pantalones']
+const categories = ['Todas', 'Chaquetas', 'Abrigos', 'Tejidos', 'Camisetas', 'Pantalones', 'Vestidos', 'Otros']
 
 export function CatalogView({ listings, onOpen, onPublish }: Props) {
   const [query, setQuery] = useState('')
@@ -30,7 +30,7 @@ export function CatalogView({ listings, onOpen, onPublish }: Props) {
   }), [listings, query, category, mode, size, zone])
 
   return (
-    <>
+    <main>
       <section className="hero shell" aria-labelledby="hero-title">
         <div className="hero-copy">
           <div className="hero-scribble" aria-hidden="true"><span /></div>
@@ -88,6 +88,6 @@ export function CatalogView({ listings, onOpen, onPublish }: Props) {
           </ContentState>
         )}
       </section>
-    </>
+    </main>
   )
 }
