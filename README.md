@@ -1,6 +1,6 @@
 # Segunda Vuelta — demo de interfaz
 
-Prototipo navegable en React y TypeScript para explorar, publicar, solicitar y acordar encuentros para donaciones o intercambios de ropa. Usa datos de ejemplo en memoria; al recargar la página se reinician los cambios. El backend FastAPI y PostgreSQL se conectarán en una etapa posterior.
+Prototipo navegable en React y TypeScript para explorar, publicar, solicitar y acordar encuentros para donaciones o intercambios de ropa. La interfaz usa datos de ejemplo en memoria; al recargar la página se reinician los cambios. El backend FastAPI se integrará con la interfaz en una etapa posterior.
 
 Segunda Vuelta busca que las personas de Ica puedan organizarse para donar o intercambiar ropa en buen estado y darle una segunda vida. El proyecto está dirigido tanto a quienes tienen prendas para compartir como a quienes desean recibirlas o intercambiarlas. Consulta el [charter](CHARTER.md) para conocer el alcance y la meta inicial.
 
@@ -24,6 +24,14 @@ Abre la dirección local que imprime Vite. Para comprobar la versión de producc
 npm run build
 npm run preview
 ```
+
+## Backend en desarrollo
+
+Desde `api/`, crea un entorno virtual e instala las dependencias con `pip install -e '.[dev]'`. Copia `api/.env.example` a `api/.env` y configura la URL de PostgreSQL y una clave JWT aleatoria de al menos 32 caracteres. Nunca compartas estos valores ni subas `.env` al repositorio.
+
+Ejecuta `alembic upgrade head` para crear las tablas y `uvicorn app.main:app --reload` para iniciar la API. La documentación interactiva está en `/docs`. Las pruebas se ejecutan con `pytest` desde `api/`.
+
+La API ofrece registro, inicio de sesión y perfil; la interfaz sigue usando datos de demostración hasta la fase de integración. La conexión real con Supabase debe configurarse y verificarse en el entorno de destino.
 
 ## Recorrido de la demo
 
