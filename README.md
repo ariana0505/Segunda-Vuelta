@@ -1,6 +1,6 @@
 # Segunda Vuelta — demo de interfaz
 
-Prototipo navegable en React y TypeScript para explorar, publicar, solicitar y acordar encuentros para donaciones o intercambios de ropa. Usa datos de ejemplo en memoria; al recargar la página se reinician los cambios. El backend FastAPI y PostgreSQL se conectarán en una etapa posterior.
+Prototipo navegable en React y TypeScript para explorar, publicar, solicitar y acordar encuentros para donaciones o intercambios de ropa. La interfaz usa datos de ejemplo en memoria; al recargar la página se reinician los cambios. El backend FastAPI se integrará con la interfaz en una etapa posterior.
 
 Segunda Vuelta busca que las personas de Ica puedan organizarse para donar o intercambiar ropa en buen estado y darle una segunda vida. El proyecto está dirigido tanto a quienes tienen prendas para compartir como a quienes desean recibirlas o intercambiarlas. Consulta el [charter](CHARTER.md) para conocer el alcance y la meta inicial.
 
