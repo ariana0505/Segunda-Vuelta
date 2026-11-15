@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useRef, useState, type FormEvent } from 'react'
 import { DEMO_USER_ID } from '../data/demo'
 import type { ClothingRequest, Listing } from '../types'
 import { Icon } from '../components/Icons'
@@ -19,14 +19,18 @@ interface Props {
 export function MyListingsView({ listings, requests, onPublish, onOpen, onRequests, onAccept, onReject, onRepost, onMessage }: Props) {
   const [acceptingId, setAcceptingId] = useState<string | null>(null)
   const [phone, setPhone] = useState('')
+  const [phoneError, setPhoneError] = useState('')
+  const phoneRef = useRef<HTMLInputElement>(null)
   const mine = listings.filter((item) => item.ownerId === DEMO_USER_ID)
 
   function accept(event: FormEvent<HTMLFormElement>, id: string) {
     event.preventDefault()
     if (phone.replace(/\D/g, '').length < 8) {
-      onMessage({ ok: false, message: 'Escribe un número de contacto válido.' })
+      setPhoneError('Escribe un número de contacto válido con al menos 8 dígitos.')
+      phoneRef.current?.focus()
       return
     }
+    setPhoneError('')
     const result = onAccept(id, phone.trim())
     onMessage(result)
     if (result.ok) { setAcceptingId(null); setPhone('') }
@@ -52,7 +56,7 @@ export function MyListingsView({ listings, requests, onPublish, onOpen, onReques
                     <strong>{pending.length} {pending.length === 1 ? 'solicitud nueva' : 'solicitudes nuevas'}</strong>
                     {pending.map((request) => <div className="incoming-request" key={request.id}>
                       <div><span className="request-avatar">{request.requesterName[0]}</span><div><strong>{request.requesterName} quiere {listing.mode === 'donacion' ? 'recibirla' : 'intercambiar'}</strong><p>{request.message}</p>{request.offeredListingId && <small>Ofrece: {listings.find((item) => item.id === request.offeredListingId)?.title}</small>}</div></div>
-                      {acceptingId === request.id ? <form className="accept-form" onSubmit={(event) => accept(event, request.id)}><label>Tu número de contacto<input type="tel" required value={phone} onChange={(event) => setPhone(event.target.value)} placeholder="Ej. 999 123 456" /></label><span>Se compartirá solo al aceptar.</span><div><button className="button button-dark" type="submit">Aceptar</button><button className="text-link" type="button" onClick={() => setAcceptingId(null)}>Volver</button></div></form> : <div className="request-actions"><button className="button button-dark" onClick={() => setAcceptingId(request.id)}>Aceptar solicitud</button><button className="button button-quiet" onClick={() => onMessage(onReject(request.id))}>Rechazar</button></div>}
+                      {acceptingId === request.id ? <form className="accept-form" onSubmit={(event) => accept(event, request.id)}><label>Tu número de contacto<input ref={phoneRef} type="tel" required value={phone} onChange={(event) => { setPhone(event.target.value); setPhoneError('') }} placeholder="Ej. 999 123 456" aria-invalid={!!phoneError} aria-describedby={phoneError ? 'accept-phone-error' : undefined} /></label>{phoneError && <span id="accept-phone-error" role="alert">{phoneError}</span>}<span>Se compartirá solo al aceptar.</span><div><button className="button button-dark" type="submit">Aceptar</button><button className="text-link" type="button" onClick={() => setAcceptingId(null)}>Volver</button></div></form> : <div className="request-actions"><button className="button button-dark" onClick={() => { setPhone(''); setPhoneError(''); setAcceptingId(request.id) }}>Aceptar solicitud</button><button className="button button-quiet" onClick={() => onMessage(onReject(request.id))}>Rechazar</button></div>}
                     </div>)}
                   </div> : related.some((item) => item.status === 'aceptada' || item.status === 'encuentro_acordado') ? <button className="inline-notice" onClick={onRequests}>Hay un acuerdo en curso. Ver en Solicitudes <Icon name="arrow" size={16} /></button> : <p className="no-requests">Aún no tiene solicitudes.</p>}
                   {listing.status === 'reservada' && <button className="subtle-link repost-link" onClick={() => onMessage(onRepost(listing.id))}>No se coordinó · volver a publicar</button>}
