@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
-import type { Listing, ListingMode } from '../../types'
-import { Icon } from '../../components/Icons'
-import { ListingCard } from './ListingCard'
+import type { Listing, ListingMode } from '../types'
+import { Icon } from '../components/Icons'
+import { ListingCard } from '../features/catalog/ListingCard'
+import { ContentState } from '../components/ContentState'
 
 interface Props {
   listings: Listing[]
@@ -9,23 +10,27 @@ interface Props {
   onPublish: () => void
 }
 
-const categories = ['Todas', 'Chaquetas', 'Abrigos', 'Tejidos', 'Camisetas', 'Pantalones']
+const categories = ['Todas', 'Chaquetas', 'Abrigos', 'Tejidos', 'Camisetas', 'Pantalones', 'Vestidos', 'Otros']
 
 export function CatalogView({ listings, onOpen, onPublish }: Props) {
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState('Todas')
   const [mode, setMode] = useState<'todas' | ListingMode>('todas')
+  const [size, setSize] = useState('')
+  const [zone, setZone] = useState('')
 
   const visible = useMemo(() => listings.filter((item) => {
     if (item.status === 'cerrada') return false
     if (category !== 'Todas' && item.category !== category) return false
     if (mode !== 'todas' && item.mode !== mode) return false
+    if (size && item.size.toLocaleLowerCase('es') !== size.toLocaleLowerCase('es')) return false
+    if (zone && !item.zone.toLocaleLowerCase('es').includes(zone.toLocaleLowerCase('es').trim())) return false
     const search = `${item.title} ${item.category} ${item.zone}`.toLocaleLowerCase('es')
     return search.includes(query.toLocaleLowerCase('es').trim())
-  }), [listings, query, category, mode])
+  }), [listings, query, category, mode, size, zone])
 
   return (
-    <>
+    <main>
       <section className="hero shell" aria-labelledby="hero-title">
         <div className="hero-copy">
           <div className="hero-scribble" aria-hidden="true"><span /></div>
@@ -69,19 +74,20 @@ export function CatalogView({ listings, onOpen, onPublish }: Props) {
         <div className="category-list" aria-label="Filtrar categoría">
           {categories.map((item) => <button key={item} className={category === item ? 'selected' : ''} onClick={() => setCategory(item)}>{item}</button>)}
         </div>
+        <div className="filters">
+          <label className="form-field">Talla<select value={size} onChange={(event) => setSize(event.target.value)}><option value="">Todas las tallas</option>{Array.from(new Set(listings.map((item) => item.size))).sort().map((item) => <option key={item} value={item}>{item}</option>)}</select></label>
+          <label className="form-field">Zona<input value={zone} onChange={(event) => setZone(event.target.value)} placeholder="Buscar zona" /></label>
+        </div>
         {visible.length > 0 ? (
           <div className="listing-grid">
             {visible.map((item) => <ListingCard key={item.id} listing={item} onOpen={onOpen} />)}
           </div>
         ) : (
-          <div className="empty-state">
-            <span className="empty-shape" aria-hidden="true" />
-            <h3>No encontramos prendas con esos filtros</h3>
-            <p>Prueba otra búsqueda o comparte la primera de esta categoría.</p>
-            <button className="button button-dark" onClick={() => { setQuery(''); setCategory('Todas'); setMode('todas') }}>Ver todas las prendas</button>
-          </div>
+          <ContentState kind="empty" title="No encontramos prendas con esos filtros" action={<button className="button button-dark" onClick={() => { setQuery(''); setCategory('Todas'); setMode('todas'); setSize(''); setZone('') }}>Ver todas las prendas</button>}>
+            Prueba otra búsqueda o comparte la primera de esta categoría.
+          </ContentState>
         )}
       </section>
-    </>
+    </main>
   )
 }

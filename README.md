@@ -48,10 +48,8 @@ La API ofrece registro, inicio de sesión y perfil; la interfaz sigue usando dat
 - `src/hooks/useDemoMarketplace.ts`: mantiene el estado temporal y las reglas del recorrido de prueba.
 - `src/data/demo.ts`: contiene exclusivamente publicaciones y solicitudes ficticias.
 - `src/types.ts`: define los tipos compartidos.
-- `src/features/catalog/`: catálogo y ficha resumida.
-- `src/features/listings/`: detalle de prenda y publicaciones propias.
-- `src/features/publish/`: formulario de publicación y selección de fotos.
-- `src/features/requests/`: seguimiento de solicitudes y acuerdos.
+- `src/pages/`: pantallas de catálogo, prendas, publicación y solicitudes.
+- `src/features/catalog/`: ficha resumida de una prenda.
 - `src/components/`: navegación, pie de página e iconos compartidos.
 - `src/styles/`: hojas separadas por área de la interfaz.
 

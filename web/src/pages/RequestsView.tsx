@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { DEMO_USER_ID } from '../../data/demo'
-import type { ClothingRequest, Listing } from '../../types'
-import { Icon } from '../../components/Icons'
+import { DEMO_USER_ID } from '../data/demo'
+import type { ClothingRequest, Listing } from '../types'
+import { Icon } from '../components/Icons'
 
 type Result = { ok: boolean; message: string }
 interface Props {

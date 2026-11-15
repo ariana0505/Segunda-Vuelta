@@ -1,6 +1,6 @@
-import { useState, type ChangeEvent, type FormEvent } from 'react'
-import { Icon } from '../../components/Icons'
-import type { Listing } from '../../types'
+import { useRef, useState, type ChangeEvent, type FormEvent } from 'react'
+import { Icon } from '../components/Icons'
+import type { Listing } from '../types'
 
 type NewListing = Omit<Listing, 'id' | 'ownerId' | 'ownerName' | 'status' | 'date'>
 type Result = { ok: boolean; message: string }
@@ -22,25 +22,33 @@ export function PublishForm({ onPublish, onSuccess, onError }: Props) {
   const [photos, setPhotos] = useState<string[]>([])
   const [busy, setBusy] = useState(false)
   const [mode, setMode] = useState<Listing['mode']>('donacion')
+  const [photoError, setPhotoError] = useState('')
+  const photoInput = useRef<HTMLInputElement>(null)
+
+  function reportPhotoError(message: string) {
+    setPhotoError(message)
+    photoInput.current?.focus()
+  }
 
   async function choosePhotos(event: ChangeEvent<HTMLInputElement>) {
     const files = Array.from(event.target.files ?? [])
     if (files.length === 0) return
     if (files.length > 3) {
-      onError('Puedes elegir hasta tres fotos.')
+      reportPhotoError('Puedes elegir hasta tres fotos.')
       event.target.value = ''
       return
     }
     if (files.some((file) => !['image/jpeg', 'image/png', 'image/webp'].includes(file.type) || file.size > 5 * 1024 * 1024)) {
-      onError('Elige fotos JPG, PNG o WebP de hasta 5 MB cada una.')
+      reportPhotoError('Elige fotos JPG, PNG o WebP de hasta 5 MB cada una.')
       event.target.value = ''
       return
     }
     try {
       setBusy(true)
       setPhotos(await Promise.all(files.map(readImage)))
+      setPhotoError('')
     } catch {
-      onError('No pudimos leer una de las fotos. Inténtalo de nuevo.')
+      reportPhotoError('No pudimos leer una de las fotos. Inténtalo de nuevo.')
     } finally {
       setBusy(false)
     }
@@ -49,7 +57,7 @@ export function PublishForm({ onPublish, onSuccess, onError }: Props) {
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (photos.length === 0) {
-      onError('Elige al menos una foto de tu galería o escritorio.')
+      reportPhotoError('Elige al menos una foto de tu galería o escritorio.')
       return
     }
     const data = new FormData(event.currentTarget)
@@ -83,11 +91,12 @@ export function PublishForm({ onPublish, onSuccess, onError }: Props) {
           <section className="form-section">
             <div className="form-section-heading"><span className="section-step">1</span><div><h2>Primero, las fotos</h2><p>Elige imágenes que ya tengas guardadas.</p></div></div>
             <label className="photo-picker">
-              <input type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={choosePhotos} aria-label="Elegir fotos desde galería o escritorio" />
+              <input ref={photoInput} type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={choosePhotos} aria-label="Elegir fotos desde galería o escritorio" aria-invalid={!!photoError} aria-describedby={photoError ? 'photo-error' : undefined} />
               <span className="upload-icon"><Icon name="upload" size={26} /></span>
               <strong>Elegir fotos de mi galería o escritorio</strong>
               <small>JPG, PNG o WebP · de 1 a 3 fotos · máximo 5 MB por foto</small>
             </label>
+            {photoError && <p id="photo-error" role="alert">{photoError}</p>}
             {photos.length > 0 && <div className="photo-previews">{photos.map((photo, index) => <img key={index} src={photo} alt={`Vista previa ${index + 1}`} />)}</div>}
           </section>
           <section className="form-section">
