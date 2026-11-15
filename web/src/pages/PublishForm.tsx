@@ -1,6 +1,6 @@
 import { useRef, useState, type ChangeEvent, type FormEvent } from 'react'
-import { Icon } from '../../components/Icons'
-import type { Listing } from '../../types'
+import { Icon } from '../components/Icons'
+import type { Listing } from '../types'
 
 type NewListing = Omit<Listing, 'id' | 'ownerId' | 'ownerName' | 'status' | 'date'>
 type Result = { ok: boolean; message: string }

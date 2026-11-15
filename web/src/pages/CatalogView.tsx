@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react'
-import type { Listing, ListingMode } from '../../types'
-import { Icon } from '../../components/Icons'
-import { ListingCard } from './ListingCard'
-import { ContentState } from '../../components/ContentState'
+import type { Listing, ListingMode } from '../types'
+import { Icon } from '../components/Icons'
+import { ListingCard } from '../features/catalog/ListingCard'
+import { ContentState } from '../components/ContentState'
 
 interface Props {
   listings: Listing[]
