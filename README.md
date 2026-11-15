@@ -25,6 +25,14 @@ npm run build
 npm run preview
 ```
 
+## Backend en desarrollo
+
+Desde `api/`, crea un entorno virtual e instala las dependencias con `pip install -e '.[dev]'`. Copia `api/.env.example` a `api/.env` y configura la URL de PostgreSQL y una clave JWT aleatoria de al menos 32 caracteres. Nunca compartas estos valores ni subas `.env` al repositorio.
+
+Ejecuta `alembic upgrade head` para crear las tablas y `uvicorn app.main:app --reload` para iniciar la API. La documentación interactiva está en `/docs`. Las pruebas se ejecutan con `pytest` desde `api/`.
+
+La API ofrece registro, inicio de sesión y perfil; la interfaz sigue usando datos de demostración hasta la fase de integración. La conexión real con Supabase debe configurarse y verificarse en el entorno de destino.
+
 ## Recorrido de la demo
 
 1. Explora el catálogo y filtra prendas por modalidad o categoría.
