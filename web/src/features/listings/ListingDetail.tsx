@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useRef, useState, type FormEvent } from 'react'
 import { DEMO_USER_ID } from '../../data/demo'
 import type { ClothingRequest, Listing } from '../../types'
 import { Icon } from '../../components/Icons'
@@ -21,6 +21,8 @@ export function ListingDetail({ listing, ownListings, alreadyRequested, onBack, 
   const [activeImage, setActiveImage] = useState(0)
   const [message, setMessage] = useState('')
   const [phone, setPhone] = useState('')
+  const [phoneError, setPhoneError] = useState('')
+  const phoneRef = useRef<HTMLInputElement>(null)
   const [offeredListingId, setOfferedListingId] = useState('')
   const isOwn = listing.ownerId === DEMO_USER_ID
   const canExchange = listing.mode === 'intercambio' && ownListings.length > 0
@@ -28,9 +30,11 @@ export function ListingDetail({ listing, ownListings, alreadyRequested, onBack, 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (phone.replace(/\D/g, '').length < 8) {
-      onError('Escribe un número de contacto válido.')
+      setPhoneError('Escribe un número de contacto válido con al menos 8 dígitos.')
+      phoneRef.current?.focus()
       return
     }
+    setPhoneError('')
     const result = onRequest({
       listingId: listing.id,
       message: message.trim(),
@@ -95,7 +99,8 @@ export function ListingDetail({ listing, ownListings, alreadyRequested, onBack, 
                 <textarea required maxLength={280} rows={3} placeholder="Hola, me interesa esta prenda porque..." value={message} onChange={(event) => setMessage(event.target.value)} />
               </label>
               <label className="form-field">Tu número de contacto
-                <input required type="tel" inputMode="tel" placeholder="Ej. 999 123 456" value={phone} onChange={(event) => setPhone(event.target.value)} />
+                <input ref={phoneRef} required type="tel" inputMode="tel" placeholder="Ej. 999 123 456" value={phone} onChange={(event) => { setPhone(event.target.value); setPhoneError('') }} aria-invalid={!!phoneError} aria-describedby={phoneError ? 'phone-error' : undefined} />
+                {phoneError && <small id="phone-error" role="alert">{phoneError}</small>}
                 <small>Solo se mostrará a la otra persona si acepta tu solicitud.</small>
               </label>
               <button className="button button-coral button-wide" type="submit" disabled={listing.mode === 'intercambio' && !canExchange}>Enviar solicitud <Icon name="arrow" size={18} /></button>
