@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useLocation, useNavigate } from 'react-router'
 import { DEMO_USER_ID } from './data/demo'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
@@ -12,8 +13,11 @@ import type { View } from './types'
 
 export default function App() {
   const marketplace = useDemoMarketplace()
-  const [view, setView] = useState<View>('catalog')
-  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const location = useLocation()
+  const go = useNavigate()
+  const paths: Record<Exclude<View, 'detail'>, string> = { catalog: '/', publish: '/publicar', 'my-listings': '/mis-prendas', requests: '/solicitudes' }
+  const selectedId = location.pathname.startsWith('/prenda/') ? decodeURIComponent(location.pathname.slice('/prenda/'.length)) : null
+  const view: View = selectedId ? 'detail' : (Object.entries(paths).find(([, path]) => path === location.pathname)?.[0] as View | undefined) ?? 'catalog'
   const [toast, setToast] = useState<{ message: string; kind: 'success' | 'error' } | null>(null)
   const selected = marketplace.listings.find((item) => item.id === selectedId)
   const ownAvailable = marketplace.listings.filter((item) => item.ownerId === DEMO_USER_ID && item.status === 'disponible')
@@ -22,13 +26,13 @@ export default function App() {
   ).length
 
   function navigate(next: View) {
-    setView(next)
+    if (next !== 'detail') go(paths[next])
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   function openListing(id: string) {
-    setSelectedId(id)
-    navigate('detail')
+    go(`/prenda/${encodeURIComponent(id)}`)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   function showMessage(message: string, kind: 'success' | 'error' = 'success') {
