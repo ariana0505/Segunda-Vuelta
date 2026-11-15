@@ -2,6 +2,14 @@
 
 Prototipo navegable en React y TypeScript para explorar, publicar, solicitar y acordar encuentros para donaciones o intercambios de ropa. Usa datos de ejemplo en memoria; al recargar la página se reinician los cambios. El backend FastAPI y PostgreSQL se conectarán en una etapa posterior.
 
+Segunda Vuelta busca que las personas de Ica puedan organizarse para donar o intercambiar ropa en buen estado y darle una segunda vida. El proyecto está dirigido tanto a quienes tienen prendas para compartir como a quienes desean recibirlas o intercambiarlas. Consulta el [charter](CHARTER.md) para conocer el alcance y la meta inicial.
+
+## Stack previsto
+
+- Interfaz: React, TypeScript y Vite; despliegue previsto en Vercel.
+- Backend: FastAPI para autenticación y reglas de negocio.
+- Datos y fotos: PostgreSQL y Storage de Supabase, accesibles desde el backend.
+
 ## Ejecutar
 
 ```bash

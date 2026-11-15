@@ -39,8 +39,7 @@ Cada parte tiene su propia configuración y el CI corre un job por carpeta.
 ## Fase 2 — rama `ci/build-check`
 
 - `ci: workflow de build`: GitHub Actions con un job para `web/` que corre `npm ci`, `tsc -b` y `vite build`.
-- `chore: añadir eslint y prettier`: configuración y script `npm run lint`.
-- `ci: ejecutar lint en el workflow`: el CI también corre el lint.
+- ESLint y Prettier se omiten por decisión de Ariana; esta fase comprueba la compilación sin añadir esas herramientas.
 
 ## Fase 3 — rama `feat/router-ui`
 
