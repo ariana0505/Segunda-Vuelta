@@ -50,11 +50,12 @@ export default function App() {
       <Header view={view} onNavigate={navigate} pendingCount={pendingCount} />
       {view === 'catalog' && <CatalogView listings={marketplace.listings} onOpen={openListing} onPublish={() => navigate('publish')} />}
       {view === 'detail' && selected && <ListingDetail key={selected.id} listing={selected} ownListings={ownAvailable} alreadyRequested={marketplace.requests.some((request) => request.listingId === selected.id && request.requesterId === DEMO_USER_ID && request.status !== 'rechazada')} onBack={() => navigate('catalog')} onMyListings={() => navigate('my-listings')} onRequest={marketplace.createRequest} onSuccess={(message) => { showMessage(message); navigate('requests') }} onError={(message) => showMessage(message, 'error')} />}
+      {view === 'detail' && !selected && <main className="shell empty-state"><h1>No encontramos esta prenda</h1><p>Es posible que ya no esté disponible.</p><button className="button button-dark" onClick={() => navigate('catalog')}>Volver al catálogo</button></main>}
       {view === 'publish' && <PublishForm onPublish={marketplace.createListing} onSuccess={(message) => { showMessage(message); navigate('my-listings') }} onError={(message) => showMessage(message, 'error')} />}
       {view === 'my-listings' && <MyListingsView listings={marketplace.listings} requests={marketplace.requests} onPublish={() => navigate('publish')} onOpen={openListing} onRequests={() => navigate('requests')} onAccept={marketplace.acceptRequest} onReject={marketplace.rejectRequest} onRepost={marketplace.repostListing} onMessage={handleResult} />}
       {view === 'requests' && <RequestsView requests={marketplace.requests} listings={marketplace.listings} onBrowse={() => navigate('catalog')} onMyListings={() => navigate('my-listings')} onMessage={handleResult} onSimulateAccept={(id) => marketplace.acceptRequest(id, '988 234 567', true)} onMarkAgreement={marketplace.markAgreement} />}
       <Footer />
-      {toast && <div className={`toast ${toast.kind}`} role="status">{toast.message}<button onClick={() => setToast(null)} aria-label="Cerrar aviso">×</button></div>}
+      {toast && <div className={`toast ${toast.kind}`} role={toast.kind === 'error' ? 'alert' : 'status'}>{toast.message}<button onClick={() => setToast(null)} aria-label="Cerrar aviso">×</button></div>}
     </div>
   )
 }
